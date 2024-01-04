@@ -36,18 +36,35 @@
         margin: 0;
         color: #fff;
     }
+
 </style>
-
-
 <h2>Task List</h2>
+
+@php
+    $tasks = \App\Models\TaskModel::all(); // Replace this with how you retrieve your tasks
+    $uniqueStatuses = collect();
+@endphp
+
+@foreach($tasks as $task)
+    <div>
+        <!-- Your task details display here -->
+        <br>
+        @unless($uniqueStatuses->contains($task->status))
+            <a href="{{ route('Tasks.filter', $task->status) }}" class="edit-link">Filter by {{ $task->status }}</a>
+            <?php $uniqueStatuses->push($task->status); ?>
+        @endunless
+    </div>
+
+    <hr>
+@endforeach
+
 <p><i>Click To =></i><a href="{{ route('Tasks.create') }}" class="create-link">Create New Task</a></p>
 @foreach($tasks as $task)
-
     <div>
         <p >Id: {{ $task->id }}</p>
         <p class="task-details">Title: {{ $task->title }}</p>
         <p class="task-details">Description: {{ $task->description }}</p>
-
+        <p class="task-details">status: {{ $task->status }}</p>
         <form action="{{ route('Tasks.destroy', $task->id) }}" method="POST" style="display: inline;">
             @csrf
             @method('DELETE')

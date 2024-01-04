@@ -24,7 +24,7 @@ class TaskController extends Controller
         $validatedData = $request->validate([   
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            // Add more validation rules for other fields if needed
+            'status' => 'required|string',
         ]);
     
         // Create a new TaskModel instance with the validated data
@@ -62,11 +62,20 @@ public function edit($id)
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'status' => 'required|string',
         ]);
 
         $task = TaskModel::findOrFail($id);
         $task->update($validatedData);
 
         return redirect()->route('Tasks.index')->with('success', 'Task updated successfully!');
+    }
+
+    public function filter(Request $request, $status)
+    {
+        // Use where to filter tasks by status
+        $tasks = TaskModel::where('status', $status)->get();
+
+        return view('Task.filter', compact('tasks'));
     }
 }
