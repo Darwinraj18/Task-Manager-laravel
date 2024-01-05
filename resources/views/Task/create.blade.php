@@ -49,6 +49,7 @@
             <label for="status">Status :</label>
             <input type="text" name="status" id="status" class="form-control" required>
         </div>
+        <input type="hidden" name="userid" value="{{ auth()->id() }}">
         <button type="submit" class="btn btn-primary">Submit</button>
         <a href="{{ route('Tasks.index') }}" class="index">index</a>
     </form>

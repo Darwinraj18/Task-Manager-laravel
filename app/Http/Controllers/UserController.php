@@ -50,12 +50,35 @@ class UserController extends Controller
         // Attempt to authenticate
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             // Authentication passed
-            return redirect()->intended('Task/create'); // Redirect to the intended page or a default page
+            return redirect()->intended('Task/index'); // Redirect to the intended page or a default page
         }
 
         // Authentication failed
         return back()->withErrors(['email' => 'Invalid credentials'])->withInput();
     }
-}
 
+    public function edit($id)
+    {
+        $task = User::findOrFail($id);
+
+        return view('auth.Edituser', compact('task'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string',
+            'password'=>'required',
+            
+        ]);
+        $validatedData['password'] = bcrypt($request->password);
+
+        $task = User::findOrFail($id);
+        $task->update($validatedData);
+
+        return redirect()->route('login')->with('success', 'Task updated successf');
+
+}
+}
 ?>

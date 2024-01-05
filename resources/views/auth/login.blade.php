@@ -4,6 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+        .form {
+    background-color: white;
+    border-radius: 20px;
+    border: 2px solid black; /* You can change the color or adjust the width as needed */
+    padding: 20px; /* Optional: Add padding for better appearance */
+    width:40%;
+    margin-left: 30%;
+    margin-top: 20px;
+}
+h2 {
+        color: #333;
+        text-align: center;
+        padding: 20px 0;
+        background-color: #007bff; 
+        margin: 0;
+        color: #fff;
+    }
+    </style>
 </head>
 <body>
     <h2>Login</h2>
@@ -17,7 +36,7 @@
             </ul>
         </div>
     @endif
-
+<div class="form">
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
@@ -30,6 +49,6 @@
         <br>
 
         <button type="submit">Login</button>
-    </form>
+    </form></div>
 </body>
 </html>

@@ -36,29 +36,41 @@
         margin: 0;
         color: #fff;
     }
+    .logout{
+        color:red; 
+        text-decoration: none;
+        margin-left: 80%;
+        font-size: large;
+        
+    }
 
 </style>
-<h2>Task List</h2>
-
+<h2>Task List</h2><br>
+<a href="{{ route('login') }}" class="logout">LogOut</a><br>
+<a href="{{ route('User.edit', ['id' => auth()->id()]) }}" class="logout">Edit Profile</a>
 @php
-    $tasks = \App\Models\TaskModel::all(); // Replace this with how you retrieve your tasks
+$tasks = auth()->check() ? \App\Models\TaskModel::where('userid', auth()->id())->get() : collect();
     $uniqueStatuses = collect();
 @endphp
 
 @foreach($tasks as $task)
     <div>
-        <!-- Your task details display here -->
+       
         <br>
-        @unless($uniqueStatuses->contains($task->status))
-            <a href="{{ route('Tasks.filter', $task->status) }}" class="edit-link">Filter by {{ $task->status }}</a>
-            <?php $uniqueStatuses->push($task->status); ?>
-        @endunless
+@unless($uniqueStatuses->contains($task->status))
+    <a href="{{ route('Tasks.filter', ['status' => $task->status]) }}" class="edit-link">Filter by {{ $task->status }}</a>
+    <?php $uniqueStatuses->push($task->status); ?>
+@endunless
     </div>
 
-    <hr>
+
 @endforeach
 
 <p><i>Click To =></i><a href="{{ route('Tasks.create') }}" class="create-link">Create New Task</a></p>
+@php
+    $tasks = \App\Models\TaskModel::where('userid', auth()->id())->get();
+    $uniqueStatuses = collect();
+@endphp
 @foreach($tasks as $task)
     <div>
         <p >Id: {{ $task->id }}</p>

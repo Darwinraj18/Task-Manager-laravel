@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 use App\Models\TaskModel;
 use Illuminate\Console\View\Components\Task;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class TaskController extends Controller
 {
     //
     public function index(){
-        $tasks = TaskModel::all();
+        // $tasks = TaskModel::all();
     
+        // return view('Task.index', compact('tasks'));
+        $user = Auth::user();
+
+        // Get tasks for the authenticated user
+        $tasks = TaskModel::where('userid', $user->id)->get();
+        //dd($tasks);
         return view('Task.index', compact('tasks'));
     }
     
@@ -26,10 +32,13 @@ class TaskController extends Controller
             'description' => 'required|string',
             'status' => 'required|string',
         ]);
+        $userId = auth()->id();  // Adjust this line based on how you manage user authentication
+
+        // Add the user ID to the validated data
+        $validatedData['userid'] = $userId;
     
         // Create a new TaskModel instance with the validated data
         $task = TaskModel::create($validatedData);
-    
         // Optionally, you can return a response or redirect to another page
         return redirect()->route('Tasks.index')->with('success', 'Task created successfully!');
     }
@@ -72,10 +81,13 @@ public function edit($id)
     }
 
     public function filter(Request $request, $status)
-    {
-        // Use where to filter tasks by status
-        $tasks = TaskModel::where('status', $status)->get();
+{
+    $user = auth()->user();
 
-        return view('Task.filter', compact('tasks'));
-    }
+    // Get tasks for the authenticated user with the specified status
+    $tasks = TaskModel::where('userid', $user->id)->where('status', $status)->get();
+
+    return view('Task.filter', compact('tasks'));
+}
+
 }
